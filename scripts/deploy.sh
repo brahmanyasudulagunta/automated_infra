@@ -1,13 +1,19 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Automated Infra deployment..."
+echo "🚀 Starting automated_infra deployment"
 
-cd terraform
-terraform init
-terraform apply -auto-approve
+terraform -chdir=terraform apply -auto-approve
 
-cd ../ansible
-ansible-playbook -i ../inventory/production.ini playbooks/site.yml
+VM_IP=$(terraform -chdir=terraform output -raw vm_ip)
 
-echo "✅ Automated Infra deployment completed"
+cat > inventory/production.ini <<EOF
+[servers]
+automated-infra ansible_host=${VM_IP} ansible_user=devops
+EOF
+
+ansible-playbook \
+  -i inventory/production.ini \
+  ansible/playbooks/site.yml
+
+echo "✅ Deployment completed successfully"
