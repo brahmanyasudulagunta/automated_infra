@@ -4,7 +4,7 @@ set -e
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
-echo "🚀 Starting automated_infra deployment"
+echo "Starting automated_infra deployment"
 
 terraform -chdir=terraform apply -auto-approve
 
@@ -19,4 +19,4 @@ ansible-playbook \
   -i inventory/production.ini \
   ansible/playbooks/site.yml
 
-echo "✅ Deployment completed successfully"
+echo "Deployment completed successfully"
